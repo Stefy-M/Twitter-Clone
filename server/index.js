@@ -28,6 +28,12 @@ function isValidTweed(tweet){
 
 }
 
+app.get('/tweets' ,(req,res) =>{
+    tweets.find().then(tweets =>{
+        res.json(tweets)
+    })
+})
+
 app.post('/tweets', (req, res) =>{
 
     if(isValidTweed(req.body)){ //Validation, Prevent injection

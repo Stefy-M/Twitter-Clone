@@ -1,3 +1,5 @@
+
+
 //This file is used to capture user data from the form
 
 
@@ -6,8 +8,11 @@ console.log("Hello World");
 const form = document.querySelector('form'); //querySelector is more useful when you want to use more complex selectors.
 const loadingElement = document.querySelector('.loading')
 const API_URL = 'http://localhost:5000/tweets';
+const tweetsElement = document.querySelector('.tweets')
 
 loadingElement.style.display ='none'
+
+listAllTweets(); //When page loads log all mews
 
 form.addEventListener('submit', (event) =>{
     //If this method is called, the default action of the event will not be triggered.
@@ -44,13 +49,49 @@ form.addEventListener('submit', (event) =>{
         }
     }).then(response => response.json())
     .then(createdTweet =>{
-        console.log(createdTweet)
-        loadingElement.style.display = 'none'
         form.reset()
         form.style.display = ''
+        listAllTweets()
+        loadingElement.style.display = 'none'
+        
+    
     })
     
     
     
 })
+
+function listAllTweets(){
+    tweetsElement.innerHTML = '';
+    fetch(API_URL).then(response => response.json())
+    .then(tweets =>{
+        console.log(tweets)
+        tweets.reverse()
+        tweets.forEach(tweet=>{
+
+            //Create a new dive to put in the tweets div
+            const div = document.createElement('div')
+            const header = document.createElement('h3')
+
+            header.textContent = tweet.name
+
+            const content = document.createElement('p')
+            content.textContent = tweet.content
+
+            const date = document.createElement('small')
+            date.textContent = new Date(tweet.created)
+
+            div.appendChild(header)
+            div.appendChild(content)
+            div.appendChild(date)
+
+            //append new div
+            tweetsElement.appendChild(div)
+
+
+
+        })
+        loadingElement.style.display = 'none';
+    })
+}
 
